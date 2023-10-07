@@ -1,1 +1,1 @@
-# tad-latex
+# TAD • LaTeX
