@@ -1,0 +1,198 @@
+\usepackage{bold-extra} % Para tener bold smallcaps
+\usepackage{mathtools}
+\usepackage{xargs} % Para tener args opcionales
+\usepackage{hyperref} % Para poder agregar phantomsections
+
+\hypersetup{ % Hyperref negro
+        colorlinks,
+        citecolor=black,
+        filecolor=black,
+        linkcolor=black,
+        urlcolor=black
+}
+
+\newcommand{\emptysection}[1]{\phantomsection\addcontentsline{toc}{section}{#1}}
+\newcommand{\emptysubsection}[1]{\phantomsection\addcontentsline{toc}{subsection}{#1}}
+\newcommand{\emptysubsubsection}[1]{\phantomsection\addcontentsline{toc}{subsubsection}{#1}}
+
+\newcommandx{\optionalParentheses}[1][1]{%
+    \ifx\relax#1%
+        \relax\empty%
+    \else%
+        (#1)%
+    \fi%
+}
+
+\makeatletter
+\def\argsSeparator{\text{ }\ensuremath{\times}\text{ }}
+
+
+\newcommand{\signature@gobblenextarg}[1]{%
+        \@ifnextchar\bgroup%
+        {\argsSeparator#1\signature@gobblenextarg}% If nextarg, put separator and do recursion
+        {\text{ }$\longrightarrow$\text{ }#1}% else, end with terminal
+}
+
+\newcommand{\signature@checknextarg}[1]{%
+    #1% Print this everytime (outside if-else)
+    \@ifnextchar\bgroup{\signature@gobblenextarg}% If nextarg, check nextarg
+    {}% else, end with nothing.
+}
+
+%\newcommand{\signature}[1]{#1 : \signature@checknextarg}
+% Optional empty #1:
+\newcommand{\signature}[1]{{\ifx\relax#1\relax\empty\else{#1 : }\fi}\signature@checknextarg}
+
+\newcommand{\checkEmpty}[1][]{%
+  \ifx\relax#1\relax\textbf{empty}\else#1\fi
+}
+
+\makeatother
+
+% ======================================================================================================= %
+
+\newcommand{\IfThenElse}[3]{%
+    \text{{\bfseries if} #1 {\bfseries then} #2 {\bfseries else} #3}
+}
+
+\makeatletter
+\def\tupleLeft{\ensuremath {\langle}}
+\def\tupleRight{\ensuremath{\rangle}}
+
+\newcommand{\tupleOf@checknextarg}{\@ifnextchar\bgroup{\tupleOf@gobblenextarg}{\tupleRight}}
+\newcommand{\tupleOf@gobblenextarg}[1]{\text{, }#1\@ifnextchar\bgroup{\tupleOf@gobblenextarg}{\tupleRight}}
+\newcommand{\tupleOf}[1]{\tupleLeft#1\tupleOf@checknextarg}
+\makeatother
+
+\newenvironment{tad}[1]{%
+    {\emptysubsection{\bfseries #1}\large\bfseries TAD {\scshape #1}\par\vspace{3mm}}%
+        \hspace{5mm}\begin{minipage}{.8\textwidth}}%
+    {\end{minipage}}
+
+\newenvironment{observadores}{%
+    {\emptysubsubsection{Observadores}\bfseries observadores básicos\par\vspace{3mm}}%
+        \hspace{5mm}\begin{minipage}{.8\textwidth}}%
+    {\end{minipage}\par\vspace{3mm}}
+
+\newenvironment{generadores}{%
+    {\emptysubsubsection{Generadores}\bfseries generadores\par\vspace{3mm}}%
+        \hspace{5mm}\begin{minipage}{.8\textwidth}}%
+    {\end{minipage}\par\vspace{3mm}}
+
+\newenvironment{operaciones}{%
+    {\emptysubsubsection{Otras Operaciones}\bfseries otras operaciones\par\vspace{3mm}}%
+        \hspace{5mm}\begin{minipage}{.8\textwidth}}%
+    {\end{minipage}\par\vspace{3mm}}
+
+
+\makeatletter
+\newenvironment{myleftflalign}{%
+    \csname fleqn\endcsname%
+    \@fleqntrue%
+    \csname flalign*\endcsname%
+}{%
+    \@fleqnfalse%
+    \csname endflalign*\endcsname%
+}
+\makeatother
+
+%\newenvironment{axi}
+%{%
+%    \ax%
+%    \csname matrix*\endcsname[l]%
+%}%
+%{%
+%    \csname endmatrix*\endcsname%
+%    \endax
+%}
+
+% \axioma <izquierda><derecha> <Opcional restriccion>
+% Se expande a:
+%   - Si c es \empty: a &\equiv b 
+%   - Sino: a &\equiv b & \{c\}
+% Hecho para usarse dentro de una matriz,
+% especificamente, dentro de \array@axiomas
+\newcommand{\axioma}[3]{%
+    #1&\equiv#2&\ifx\relax#3\relax\textbf{\empty}\else\{#3\}\fi\\}
+
+% Custom Matrix Environment
+% La idea era recrear "matrix*[l]" de mathtools,
+% pero no es fácil pasarle los parámetros.
+% Para eso, uso un array con reglas para las columnas (porque las se de antemano)
+
+
+% \section@axiomas crea la minipage para los axiomas
+% Usa \myleftalign para crear un math environment adentro de sí mismo
+% Es necesario para que funcione bien el ambiente de matriz
+% o de array \array@axiomas
+
+\makeatletter
+\newenvironment{section@axiomas}
+{%
+    \bfseries axiomas\par\vspace{-2mm}%
+    \hspace{5mm}\minipage{.8\textwidth}%
+    \myleftflalign%
+}%
+{%
+    \endmyleftflalign%
+    \endminipage\par\vspace{3mm}%
+}
+
+
+% \array@axiomas crea una matriz con un espaciado prefijado.
+% Uso: 
+%     \begin{axiomas}
+%            \axioma{a \bullet b}{\IfThenElse{$a > b$}{$\{\}$}{\texttt{null}}}{abc}
+%            \axioma{1}{2}{}
+%            \axioma{1}{2}{}
+%     \end{axiomas}
+% 
+% Donde: \axioma{a}{b}{c} === a &\equiv b & \{c\} \\
+\newenvironment{array@axiomas}{%
+  % [padding] + [centered col] + [leftaligned col] + [rightaligned col + [padding]
+  \begin{array}{@{}*{1}{c}*{1}{l}*{1}{r}@{}}%
+  % Esta linea es para establecer los espacios horizontales, pero como agrega texto, el espacio
+  % vertical se compensa con \vspace
+  \text{}&\text{}\text{}&\hspace{63mm}\text{}\vspace{-5mm}\\
+}{%
+  \end{array}%
+}
+
+% array@Axiomas <Opcional distancia_restriccion> <Opcional offset_vertical>
+% Donde:
+%   - distancia_restriccion: Es el espacio entre la segunda columna (cuerpo del axioma)
+%                            y la tercer columna (restriccion)
+%
+%   - offset_vertical: Es el offset entre el título y la segunda fila. La primer fila es
+%                      dummy para poder fijar la distancia horizontal de la restriccion.
+%
+%
+% Nota: El uso de \array y \endarray difiera de array@axiomas para que LaTeX reconozca bien
+% el final del environment.
+\NewDocumentEnvironment{array@Axiomas}{O{63mm} O{-5mm}}{%
+  % [padding] + [centered col] + [leftaligned col] + [rightaligned col + [padding]
+  \array{@{}*{1}{c}*{1}{l}*{1}{r}@{}}
+  % Esta linea es para establecer los espacios horizontales, pero como agrega texto, el espacio
+  % vertical se compensa con \vspace
+  \text{}&\text{}\text{}&\hspace{#1}\text{}\vspace{#2}\\
+}{%
+  \endarray%
+}
+
+\newenvironment{axiomas}
+{%
+    \emptysubsubsection{Axiomas}
+    % Crea una minipage que contiene un
+    % math environment left-aligned (a la izq de la pagina)
+    \section@axiomas%
+    % Crea una matriz donde la primer columna esta centrada
+    % La segunda alineada a la izq, y la ultima a la derecha
+    \csname array@axiomas \endcsname%
+}%
+{%
+    \csname endarray@axiomas \endcsname%
+    \endsection@axiomas
+}
+
+\makeatother
+% ======================================================================================================= %
