@@ -1,0 +1,31 @@
+\documentclass{article}
+\usepackage{tad}
+
+\begin{document}
+
+\begin{tad}{Test}
+    \begin{observadores}
+        \signature{$f$}{A}{B}{C} \hfill{$\{a > b\}$}\par
+        \signature{$g$}{A}{B} \par
+    \end{observadores}
+    
+    \begin{generadores}
+        \signature{$f$}{A}{B}{C} \hfill{$\{a > b\}$}\par
+        \signature{$g$}{A}{B} \par
+    \end{generadores}
+
+    \begin{operaciones}
+        \signature{$f$}{A}{B}{C} \hfill{$\{a > b\}$}\par
+        \signature{$g$}{A}{B} \par
+    \end{operaciones}
+
+    \begin{axiomas}
+            \axioma{a \bullet b}{\IfThenElse{$a > b$}{$\{\}$}{\texttt{null}}}{abc}
+            \axioma{1}{2}{}
+            \axioma{1}{2}{}
+    \end{axiomas}
+
+    
+\end{tad}
+
+\end{document}
