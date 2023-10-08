@@ -1,0 +1,60 @@
+\usepackage{amsmath}
+\usepackage{xargs}
+\usepackage{ifthen}
+
+% Si el parametro no es nulo, el resultado es "(parametro)"
+\newcommandx{\optionalParentheses}[1][1=\empty]{%
+    \ifthenelse{\equal{#1}{\empty}}{}{(#1)}
+}
+
+\newcommand{\generico}[1]{$\langle$#1$\rangle$}
+
+% Si el parametro no es nulo, el resultado es "<parametro>"
+\newcommandx{\optionalGeneric}[1][1=\empty]{%
+  \ifthenelse{\equal{#1}{\empty}}{}{$\langle$#1$\rangle$}
+}
+
+% \var{NOMBRE}[opcional: tipo]
+\newcommandx{\var}[2][2=\empty]{$#1$\ifthenelse{\equal{#2}{\empty}}{}{ : #2}}
+
+% Funciones para escribir "in, out, inout"
+\newcommand{\In}[1]{\text{\textbf{in }#1}}
+\newcommand{\Out}[1]{\text{\textbf{out }#1}}
+\newcommand{\InOut}[1]{\text{\textbf{inout }#1}}
+
+% Signo de "=="
+\newcommand{\equals}{\ensuremath{{=\joinrel=}}}
+
+% \signatura{NOMBRE}[opcional: argumentos]{RESULTADO}
+% Si se usan argumentos, el resultado es:
+% <nombre>(argumentos) -> resultado
+% Sino,
+% <nombre> : resultado
+\newcommandx{\signatura}[3][2={}]{%
+    \text{#1\ifthenelse{\equal{#2}{\empty}}{ :}{(#2) $\to$} #3}
+}
+
+% \obs{NOMBRE}[opcional: argumentos]{RESULTADO}
+\newcommandx{\obs}[3][2={}]{%
+    \textbf{obs} \text{#1\ifthenelse{\equal{#2}{\empty}}{ :}{(#2) $\to$} #3}\par\vspace{3mm}
+}
+
+% \begin{proc}{NOMBRE}[opcional: argumentos]{RESULTADO} ... \end{proc}
+\newenvironmentx{proc}[3][2={}]{%
+    {\textbf{proc} \signatura{#1}[#2]{#3}\par\vspace{0.5mm}}%
+        \hspace{5mm}\minipage{.8\textwidth}}%
+    {\endminipage\par\vspace{3mm}}
+
+% \Proc{NOMBRE}[opcional: argumentos]{RESULTADO}
+\newcommandx{\Proc}[3][2={}]{%
+    \textbf{proc} \signatura{#1}[#2]{#3}\par\vspace{3mm}
+}
+
+\newcommand{\requiere}[1]{\textbf{requiere }#1\par}
+\newcommand{\asegura}[1]{\textbf{asegura }#1\par}
+
+% \begin{tad}{NOMBRE}[opcional: parametros]
+\newenvironmentx{tad}[2][2={}]{%
+    {\large\bfseries TAD {\scshape #1}\optionalGeneric[#2]\par\vspace{3mm}}%
+        \hspace{5mm}\minipage{.8\textwidth}}%
+    {\endminipage}
