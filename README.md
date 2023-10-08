@@ -1,6 +1,8 @@
 # TAD • LaTeX
 
-Acá se encuentran archivos de estilo de $\LaTeX$ para poder escribir especificaciones algebraicas de tipos abstractos de datos (TAD) según el formato de [Algoritmos y Estructuras de Datos II (COMP930004).](https://github.com/joangq/exactas/tree/main/COMP930004-AED2) Es decir, de la siguiente manera:
+Acá se encuentran archivos de estilo de $\LaTeX$ para poder escribir especificaciones algebraicas de tipos abstractos de datos (TAD). 
+
+El formato de [Algoritmos y Estructuras de Datos II (COMP930004).](https://github.com/joangq/exactas/tree/main/COMP930004-AED2) es el siguiente:
 
 ---
 
@@ -22,6 +24,26 @@ $$
 & \qquad \textbf{axiomas} \\
 & \qquad\qquad s \texttt{ \\& } t \equiv \textbf{if } \text{vacía?}(s) \textbf{ then } t \textbf{ else } \text{prim}(s) \bullet (\text{fin}(s)\texttt{ \\& } t) \\
 & \qquad\qquad \vdots \\
+\end{aligned}
+$$
+
+---
+
+Sin embargo, en [el nuevo plan](https://computacion.dc.uba.ar/plan-de-estudios-2023/) el formato propuesto es el siguiente:
+
+---
+
+$$
+\begin{aligned}
+& \textbf{TAD Par $\langle$A, B$\rangle$} \\
+& \qquad \textbf{obs }\text{first} : \text{A} \\
+& \qquad \textbf{obs }\text{second} : \text{B} \\
+& \qquad \textbf{obs }\text{select}(\textbf{in }x : \texttt{int}) \to res : \text{A} \cup \text{B} \\
+& \\
+& \qquad \textbf{proc }\text{sumarYdividir}(\textbf{in }t : \texttt{par$\langle$int,int$\rangle$}, \textbf{in }x : \texttt{int}) \to res : \texttt{int}\\
+& \qquad\qquad \textbf{requiere } x \neq 0\\
+& \qquad\qquad \textbf{asegura } res == \frac{\text{t}.first + \text{t}.second}{x}\\
+& \\
 \end{aligned}
 $$
 
