@@ -1,0 +1,22 @@
+\documentclass{article}
+\usepackage{tadv2}
+
+\begin{document}
+
+\noindent
+\begin{tad}{Conjunto}[T]
+    \obs{elems}{\texttt{conj<T>}}
+    \obs{elems}[]{\texttt{conj<T>}}
+
+    \begin{proc}{pertenece}[\In{\var{c}[Conjuto\generico{T}]}, \In{\var{e}[T]}]{\var{res}[\texttt{bool}]}
+        \requiere{\texttt{true}}
+        \asegura{$res$ \equals{} \texttt{true} $\iff$ e $\in$ $c$.elems}
+    \end{proc}
+
+    \Proc{existe}{\texttt{bool}}
+    
+    \Proc{pertenece}[\In{\var{c}[Conjuto\generico{T}]}, \In{\var{e}[T]}]{\var{res}[\texttt{bool}]}%
+
+\end{tad}
+
+\end{document}
