@@ -50,3 +50,4 @@ $$
 ---
 
 En `tad.sty` se encuentra el formato a secas, y en `tad-hyperref.sty` se incluyen modificaciones para que se generen secciones, subsecciones, etc. según sea necesario para documentar los TADs en el índice.
+En `tadv2.sty` se encuentra el formato nuevo.
